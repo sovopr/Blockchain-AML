@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threats - The Smurfing Hunter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/pastel-theme.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">
+                <a href="index.html"
+                    style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                    <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5" />
+                        <circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="2" opacity="0.5" />
+                        <circle cx="16" cy="16" r="4" fill="currentColor" />
+                    </svg>
+                    Smurfing Hunter
+                </a>
+            </h1>
+            <nav class="breadcrumb">
+                <a href="index-platform.html" class="breadcrumb-item" style="text-decoration: none;">Global Network</a>
+                <a href="analytics.html" class="breadcrumb-item" style="text-decoration: none;">Analytics</a>
+                <a href="threats.html" class="breadcrumb-item active" style="text-decoration: none;">Threats</a>
+            </nav>
+            <div class="search-container"></div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <h2 style="margin-bottom: 32px; font-size: 2rem;">Active Threats & Major Flags</h2>
+
+        <div class="card" style="margin-bottom: 32px;">
+            <h3 class="card-title">Threat Intelligence Summary</h3>
+            <p style="color: #888; margin-bottom: 16px;">Based on dataset analysis of recent transaction blocks.</p>
+            <div style="display: flex; gap: 24px;">
+                <div
+                    style="flex: 1; padding: 16px; background: rgba(255, 0, 128, 0.1); border-radius: 8px; border: 1px solid rgba(255, 0, 128, 0.2);">
+                    <div style="font-size: 0.875rem; color: #FF0080; font-weight: 600; text-transform: uppercase;">
+                        Critical Threats</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #FF0080;">12</div>
+                </div>
+                <div
+                    style="flex: 1; padding: 16px; background: rgba(245, 166, 35, 0.1); border-radius: 8px; border: 1px solid rgba(245, 166, 35, 0.2);">
+                    <div style="font-size: 0.875rem; color: #F5A623; font-weight: 600; text-transform: uppercase;">
+                        Suspicious Activities</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #F5A623;">48</div>
+                </div>
+                <div
+                    style="flex: 1; padding: 16px; background: rgba(0, 112, 243, 0.1); border-radius: 8px; border: 1px solid rgba(0, 112, 243, 0.2);">
+                    <div style="font-size: 0.875rem; color: #0070F3; font-weight: 600; text-transform: uppercase;">Mule
+                        Accounts</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #0070F3;">156</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">Major Detected Threats</h3>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Threat Level</th>
+                            <th>Pattern Type</th>
+                            <th>Source Wallet</th>
+                            <th>Value at Risk</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="threats-body">
+                        <!-- Dynamic Content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="js/data-processor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const processor = new DataProcessor();
+            await processor.loadData();
+
+            // Simulate threat detection logic or use processor data
+            const threats = [
+                { level: 'Critical', pattern: 'Smurfing (Fan-Out)', wallet: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', value: '$1.2M', status: 'Active' },
+                { level: 'Critical', pattern: 'Structuring', wallet: '0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7', value: '$850k', status: 'Acitve' },
+                { level: 'High', pattern: 'Peeling Chain', wallet: '0x109D813354C114995f3299738092789432924902', value: '$420k', status: 'Monitoring' },
+                { level: 'High', pattern: 'Mixing', wallet: '0x43862210801283726AA153228943282299292011', value: '$300k', status: 'Monitoring' },
+                { level: 'Medium', pattern: 'Rapid Movement', wallet: '0x5329596920192839210293848821921929392212', value: '$120k', status: 'Resolved' },
+                { level: 'Medium', pattern: 'Structuring', wallet: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', value: '$95k', status: 'Investigating' },
+            ];
+
+            const tbody = document.getElementById('threats-body');
+            tbody.innerHTML = threats.map(t => {
+                let color = '#0070F3';
+                if (t.level === 'Critical') color = '#FF0080';
+                if (t.level === 'High') color = '#F5A623';
+
+                return `
+                    <tr>
+                        <td><span class="status-badge" style="background: ${color}22; color: ${color};">${t.level}</span></td>
+                        <td>${t.pattern}</td>
+                        <td style="font-family: monospace;">${t.wallet.substring(0, 24)}...</td>
+                        <td>${t.value}</td>
+                        <td>${t.status}</td>
+                    </tr>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+
+</html>

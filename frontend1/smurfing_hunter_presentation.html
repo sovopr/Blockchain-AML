@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smurfing Hunter - Team Tatkal Agents</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --code-bg: #161b22;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .deck {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: var(--bg-color);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4vmin;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        /* Typography */
+        h1 { font-size: 8vmin; margin: 0 0 2vmin 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5vmin; text-shadow: 0 0 2vmin var(--accent-color); text-align: center; }
+        h2 { font-size: 5vmin; margin: 0 0 4vmin 0; border-bottom: 0.5vmin solid var(--accent-color); padding-bottom: 1vmin; color: #fff; }
+        h3 { font-size: 3vmin; margin: 1vmin 0; color: var(--accent-color); }
+        p, li { font-size: 2.5vmin; line-height: 1.5; color: var(--text-color); }
+        
+        ul { padding-left: 4vmin; max-width: 80%; }
+
+        /* Layout */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            height: 90%;
+            justify-content: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4vmin;
+            width: 90%;
+            align-items: stretch;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 3vmin;
+            border-radius: 1vmin;
+            border: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            padding: 2vmin;
+            border-radius: 1vmin;
+            font-family: 'Courier New', monospace;
+            font-size: 2vmin;
+            border-left: 1vmin solid var(--accent-color);
+            margin: 2vmin 0;
+            width: 80%;
+            box-shadow: inset 0 0 2vmin rgba(0,0,0,0.5);
+            white-space: pre-wrap;
+        }
+
+        /* Elements */
+        .tag {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 1vmin 2vmin;
+            border-radius: 0.5vmin;
+            font-size: 2vmin;
+            margin: 0 1vmin;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .team-name {
+            margin-top: 5vmin;
+            font-weight: bold;
+            color: #fff;
+            font-size: 2.5vmin;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 2vmin;
+            right: 3vmin;
+            font-size: 2vmin;
+            color: #555;
+            display: flex;
+            gap: 2vmin;
+            align-items: center;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 1vmin;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
+        }
+
+        .highlight { color: var(--accent-color); font-weight: bold; }
+        
+        /* Full Screen Button */
+        .fs-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #888;
+            padding: 0.5vmin 1vmin;
+            cursor: pointer;
+            border-radius: 0.5vmin;
+            font-size: 1.5vmin;
+            transition: all 0.2s;
+        }
+        .fs-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+        /* SVG Scaling */
+        svg { width: 100%; height: auto; max-height: 40vh; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+    <div class="slide active">
+        <div class="content-wrapper">
+            <h1>Smurfing Hunter</h1>
+            <h3>AI-Powered AML Forensics</h3>
+            <p style="margin-top: 4vmin; color: #8b949e;">Detecting Peeling Chains & Cyclic Smurfing on the Blockchain</p>
+            <div style="margin-top: 4vmin;">
+                <span class="tag">Graph Neural Networks</span>
+                <span class="tag">Forensics</span>
+            </div>
+            <div class="team-name">By Team Tatkal Agents</div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>The Problem: Digital Laundering</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3>The Challenge</h3>
+                    <p>Criminals use structural patterns to hide money trails.</p>
+                    <ul>
+                        <li><strong>Peeling Chains:</strong> Breaking funds into tiny "dust" transactions.</li>
+                        <li><strong>Cyclic Smurfing:</strong> Loops that inflate volume and confuse auditors.</li>
+                    </ul>
+                </div>
+                <div class="card" style="align-items: center; background: #000;">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" stroke="#333" stroke-width="2" fill="none" />
+                        <circle cx="50" cy="50" r="2" fill="red" />
+                        <path d="M50 50 L 80 20 M 50 50 L 20 80 M 50 50 L 20 20 M 50 50 L 80 80" stroke="#58a6ff" stroke-width="1" />
+                        <circle cx="80" cy="20" r="3" fill="#58a6ff" />
+                        <circle cx="20" cy="80" r="3" fill="#58a6ff" />
+                        <circle cx="20" cy="20" r="3" fill="#58a6ff" />
+                        <circle cx="80" cy="80" r="3" fill="#58a6ff" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>The Solution</h2>
+            <ul>
+                <li><span class="highlight">GNN Detection:</span> 3-layer GCN classifying illicit wallets.</li>
+                <li><span class="highlight">Automated Reports:</span> Instant "Police Report" generation.</li>
+                <li><span class="highlight">Flow Tracing:</span> Interactive Sankey diagrams.</li>
+            </ul>
+            <div class="code-block">
+Recall Rate: 98% (Illicit Detection)
+Tech Stack:  PyTorch Geometric, Apple MPS
+Key Feature: "Anti-Bunching" Graph Physics
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>Topology Over Amount</h2>
+            <div class="grid-container" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2vmin;">
+                <div class="card">
+                    <h3>1. TrustRank</h3>
+                    <p>PageRank w/ "Illicit Seeds" to propagate suspicion.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Flow Ratio</h3>
+                    <p>Classifies wallets: Boss (Accumulator) vs Smurf (Disperser).</p>
+                </div>
+                <div class="card">
+                    <h3>3. Temporal Analysis</h3>
+                    <p>Avg time gap between In/Out transfers.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Cycle Detection</h3>
+                    <p>Finds closed loops (Length ≤ 6).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>The GCN Model</h2>
+            <div class="code-block">
+class GCN(torch.nn.Module):
+    def __init__(self):
+        super(GCN, self).__init__()
+        # 3 Layers for 3-hop neighborhood
+        self.conv1 = GCNConv(in_c, 64)
+        self.conv2 = GCNConv(64, 64)
+        self.conv3 = GCNConv(64, out_c)
+
+    def forward(self, x, edge_index):
+        x = self.conv1(x, edge_index).relu()
+        x = self.conv2(x, edge_index).relu()
+        return self.conv3(x, edge_index)
+            </div>
+            <p><strong>Training:</strong> Weighted Loss (1:30) to prioritize finding criminals.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>Forensics Dashboard</h2>
+            <div style="display: flex; gap: 4vmin; width: 100%; align-items: center;">
+                <div style="flex: 1;">
+                    <h3>Functions</h3>
+                    <ul style="padding-left: 2vmin;">
+                        <li><strong>Network Inspector:</strong> Force-directed graph that explodes clusters.</li>
+                        <li><strong>Flow Tracer:</strong> Red links = Smurfing (< $10).</li>
+                        <li><strong>System Metrics:</strong> Real-time precision/recall.</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; background: #111; padding: 2vmin; border: 1px solid #444; border-radius: 1vmin;">
+                   <pre style="color: #0f0; font-size: 2vmin; white-space: pre-wrap;">
+[ SYSTEM ALERT ]
+Target: Wallet_0x83...
+Risk:   CRITICAL (0.98)
+Pattern: DISPERSION
+
+> Generating Report...
+> 4 Illicit neighbors found.
+                   </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h2>Tech Stack</h2>
+            <div style="display: flex; justify-content: space-around; width: 100%; margin-top: 4vmin;">
+                <div style="text-align: center;">
+                    <h3>AI Core</h3>
+                    <p>PyTorch Geometric<br>Scikit-Learn<br>NetworkX</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3>Viz</h3>
+                    <p>Streamlit<br>Plotly (Sankey)<br>Agraph</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3>Hardware</h3>
+                    <p>Apple MPS (Metal)<br>Optimized Tensors</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="content-wrapper">
+            <h1>Thank You</h1>
+            <p style="margin-top: 2vmin;">Team Tatkal Agents</p>
+            <div style="margin-top: 5vmin; font-size: 2vmin; color: #666;">
+                Future Roadmap: Temporal GNNs & Real-time RPC Indexing
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-bar" id="progress"></div>
+    <div class="footer">
+        <button class="fs-btn" onclick="toggleFullScreen()">⛶ Full Screen</button>
+        <span>Use Arrow Keys ➡</span>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const progressBar = document.getElementById('progress');
+
+    function updateSlide() {
+        slides.forEach((slide, index) => {
+            slide.classList.remove('active', 'prev');
+            if (index === currentSlide) {
+                slide.classList.add('active');
+            } else if (index < currentSlide) {
+                slide.classList.add('prev');
+            }
+        });
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    // Toggle Full Screen Logic
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        } else if (e.key === 'ArrowLeft') {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        } else if (e.key === 'f' || e.key === 'F') {
+            toggleFullScreen(); // 'F' key shortcut
+        }
+    });
+
+    // Touch support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+    document.addEventListener('touchend', e => {
+        if (e.changedTouches[0].screenX < touchStartX - 50) {
+             if (currentSlide < totalSlides - 1) currentSlide++; 
+        } else if (e.changedTouches[0].screenX > touchStartX + 50) {
+             if (currentSlide > 0) currentSlide--;
+        }
+        updateSlide();
+    });
+
+    document.getElementById('deck').addEventListener('click', (e) => {
+        if (e.target.tagName !== 'BUTTON') { // Ignore button clicks for slide advance
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+    });
+
+    updateSlide();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - The Smurfing Hunter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/pastel-theme.css">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">
+                <a href="index-platform.html"
+                    style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                    <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5" />
+                        <circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="2" opacity="0.5" />
+                        <circle cx="16" cy="16" r="4" fill="currentColor" />
+                    </svg>
+                    Smurfing Hunter
+                </a>
+            </h1>
+            <nav class="breadcrumb">
+                <a href="index-platform.html" class="breadcrumb-item" style="text-decoration: none;">Global Network</a>
+                <a href="analytics.html" class="breadcrumb-item active" style="text-decoration: none;">Analytics</a>
+                <a href="threats.html" class="breadcrumb-item" style="text-decoration: none;">Threats</a>
+            </nav>
+            <div class="search-container">
+                <!-- Optional Search -->
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <h2 style="margin-bottom: 32px; font-size: 2rem;">Global Network Analytics</h2>
+
+        <div class="content-grid" style="grid-template-columns: 1fr; gap: 32px;">
+            <div class="card" style="padding: 24px;">
+                <h3 class="card-title">Network Risk Distribution (Volume vs Risk)</h3>
+                <div id="global-risk-chart" style="width: 100%; height: 500px;"></div>
+            </div>
+
+            <div class="card" style="padding: 24px;">
+                <h3 class="card-title">Contagion Growth (Network Infection Rate)</h3>
+                <div id="contagion-chart" style="width: 100%; height: 500px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading Analytics...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loading = document.getElementById('loading');
+
+            // Helper to hide loading if it's the last pending request
+            let pending = 2;
+            const completion = () => {
+                pending--;
+                if (pending <= 0) loading.classList.add('hidden');
+            };
+
+            // 1. Global Risk Chart
+            fetch('/api/global-risk')
+                .then(res => res.json())
+                .then(riskData => {
+                    if (riskData.error) throw new Error(riskData.error);
+
+                    const trace = {
+                        x: riskData.map(d => d.display_vol),
+                        y: riskData.map(d => d.risk_score),
+                        mode: 'markers',
+                        marker: {
+                            size: 10, // Fixed size for uniformity
+                            color: riskData.map(d => {
+                                if (d.role === 'Source') return '#00C853'; // Green
+                                if (d.role === 'Mule') return '#FFAB00'; // Orange
+                                return '#2962FF'; // Blue (Aggregator)
+                            }),
+                            opacity: 0.7,
+                            line: { width: 1, color: '#000' }
+                        },
+                        text: riskData.map(d => `ID: ${d.wallet_id}<br>Role: ${d.role}<br>Vol: $${Math.round(d.display_vol)}`),
+                        type: 'scatter'
+                    };
+
+                    const layout = {
+                        title: 'Volume vs Risk (USD)',
+                        xaxis: {
+                            title: 'Volume (USD)',
+                            type: 'log',
+                            gridcolor: '#333'
+                        },
+                        yaxis: {
+                            title: 'Risk Score (GNN Probability)',
+                            gridcolor: '#333',
+                            range: [0, 1.1]
+                        },
+                        plot_bgcolor: '#000',
+                        paper_bgcolor: '#000',
+                        font: { color: '#FAFAFA' },
+                        showlegend: false,
+                        margin: { l: 50, r: 50, b: 50, t: 50 }
+                    };
+
+                    Plotly.newPlot('global-risk-chart', [trace], layout);
+                })
+                .catch(e => {
+                    console.error("Risk Chart Error:", e);
+                    document.getElementById('global-risk-chart').innerHTML = "<p style='color:red; text-align:center; padding-top:20px;'>Failed to load Risk Data</p>";
+                })
+                .finally(completion);
+
+            // 2. Contagion Chart
+            fetch('/api/contagion')
+                .then(res => res.json())
+                .then(contagionData => {
+                    if (contagionData.error) throw new Error(contagionData.error);
+
+                    const trace = {
+                        x: contagionData.map(d => d.time),
+                        y: contagionData.map(d => d.new_wallets),
+                        type: 'scatter',
+                        mode: 'lines',
+                        line: { color: '#0070F3', width: 2 },
+                        fill: 'tozeroy',
+                        fillcolor: 'rgba(0, 112, 243, 0.2)',
+                        hovertemplate: '%{y} Wallets<extra></extra>' // Only show Y value (Wallets)
+                    };
+
+                    const layout = {
+                        title: 'Network Infection Rate (New Wallets/Hour)',
+                        xaxis: { title: 'Time', gridcolor: '#333' },
+                        yaxis: { title: 'New Wallets', gridcolor: '#333' },
+                        plot_bgcolor: '#000',
+                        paper_bgcolor: '#000',
+                        font: { color: '#FAFAFA' },
+                        margin: { l: 50, r: 50, b: 50, t: 50 }
+                    };
+
+                    Plotly.newPlot('contagion-chart', [trace], layout);
+                })
+                .catch(e => {
+                    console.error("Contagion Chart Error:", e);
+                    document.getElementById('contagion-chart').innerHTML = "<p style='color:red; text-align:center; padding-top:20px;'>Failed to load Contagion Data</p>";
+                })
+                .finally(completion);
+        });
+    </script>
+</body>
+
+</html>
