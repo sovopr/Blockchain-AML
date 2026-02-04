@@ -124,4 +124,4 @@ The core detection engine is a **Graph Neural Network (GNN)** defined in `backen
 * **Output:** Binary Classification (0: Safe, 1: Suspicious) or Multi-class (Safe, Smurf, Mule).
 * **Fallback:** If model weights (`model_weights.pth`) are missing, the system uses a sophisticated probabilistic mock generator for demos.
 ## 👨🏻‍💻 Website !
-https://surfing-hunter.onrender.com/index.html
+[Smurfing Hunter](https://surfing-hunter.onrender.com)
